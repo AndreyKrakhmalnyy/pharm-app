@@ -1,0 +1,22 @@
+version: '3.10' # Версия python
+
+services:
+  db: # POSTGRES_HOST из .env
+    image: postgres:latest # Версия psql
+    container_name: pharmapp_postgres # Имя контейнера БД
+    volumes: 
+      - ~/.pg/pg_data/pharmapp_db:/var/lib/postgresql/data
+    env_file: # Имя файла с зависимостями
+      - .env
+
+  project:
+    image: pharmapp_image:latest # Имя созданного образа по Dockerfile
+    container_name: pharmapp_container
+    depends_on: # Установление зависимости образа от сервиса БДы
+      - db
+    env_file: # Имя файла с зависимостями
+      - .env
+    ports:
+      - "8000:8000"
+    command: > # Описание всего, что нужно сделать контейнеру для запуска приложения
+      bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000" 
