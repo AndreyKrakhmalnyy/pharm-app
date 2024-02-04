@@ -1,11 +1,11 @@
 from django.db import models
 
+
 class Category(models.Model): # Описывает тип аптечного товара (лекарства, БАДы и витамины, косметика и т.д.)
     name_category = models.CharField(max_length=50)
     
     def __str__(self):
         return self.name_category
-    
     
 class SubCategory(models.Model): # Описывает классификацию типа товарв (например, БАДы и витамины --> БАДы для мужчин, БАДы для улучшения памяти и т.д.)
     name_subcategory = models.CharField(max_length=50)
@@ -13,7 +13,6 @@ class SubCategory(models.Model): # Описывает классификацию
     
     def __str__(self):
         return self.name_subcategory
-    
     
 class Product(models.Model): # Описывает основные характеристики выбранного товара
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
