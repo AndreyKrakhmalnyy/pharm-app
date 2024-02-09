@@ -1,13 +1,13 @@
-# DRF
+# DJANGO REST FRAMEWORK
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-# Swagger
+# OPENAPI/SWAGGER-UI
 from drf_spectacular.utils import extend_schema
-# models
+# products/models.py
 from products.models import Category, SubCategory, Instruction, Product
 # JWT
 from rest_framework_simplejwt.authentication import JWTAuthentication
-# serializers
+# products/serializers.py
 from products.serializers import (
     CategorySerializer, 
     SubCategorySerializer, 
