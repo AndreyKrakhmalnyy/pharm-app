@@ -24,23 +24,24 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # _________DJANGO_________ #
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #__________JWT__________#
+    # _________JWT_________ #
     'rest_framework_simplejwt',
-    #__________DRF__________#
+    # _________DRF_________ #
     'rest_framework',
-    #__________pharm_app__________#
+    # _________pharm_app_________ #
     'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'products.apps.ProductsConfig',
     'authorization.apps.AuthorizationConfig',
-    #__________OpenApi/Swagger-UI__________#
+    # _________OPENAPI/SWAGGER-UI_________ #
     'drf_spectacular',
 ]
 
@@ -78,6 +79,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+# _________POSTGRESQL_________ #
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -135,6 +138,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+# _________DJANGO REST FRAMEWORK_________ #
 REST_FRAMEWORK = {
     #______________JWT______________#
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -147,8 +153,10 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+
+# _________JWT_________ #
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -187,10 +195,15 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+# _________SWAGGER_________ #
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Django5 Test Swagger API',
     'DESCRIPTION': 'Django5 Test Swagger API description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
-
+# ______________________________________________________________________________________________________________________
+# _________REDIS_________ #
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+# ______________________________________________________________________________________________________________________

@@ -20,15 +20,17 @@ urlpatterns = [
     path('hello/', views.HelloView.as_view(), name='hello'),
     path('pages/', include('pages.urls')),
     path('admin/', admin.site.urls),
-    #______________API_______________#
+    # _____________API______________ #
     path('', include(router.urls)), # Подставляем автоматически созданные URL-маршруты от router выше 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    #______________Swagger_______________#
+    # _____________SWAGGER______________ #
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-    #______________JWT_______________#
+    # _____________JWT______________ #
     path('JWT/api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('JWT/api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('JWT/api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    # _____________REDIS______________ #
+    path('products/', include('products.urls')),
 ]
