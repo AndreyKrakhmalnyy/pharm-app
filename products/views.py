@@ -1,5 +1,6 @@
 # DJANGO REST FRAMEWORK
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 # OPENAPI/SWAGGER-UI
 from drf_spectacular.utils import extend_schema
@@ -16,7 +17,7 @@ from products.serializers import (
 
 @extend_schema(tags=['Category'])
 class CategoryApiView(viewsets.ModelViewSet): 
-    queryset = Category.objects.all()
+    categories = Category.objects.all()
     serializer_class = CategorySerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     permission_classes = (IsAuthenticated,)
