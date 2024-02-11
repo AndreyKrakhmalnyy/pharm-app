@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-# _________POSTGRESQL_________ #
+# POSTGRESQL settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -140,13 +140,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-# _________DJANGO REST FRAMEWORK_________ #
+# DJANGO REST FRAMEWORK settings (JWT and OPENAPI/SWAGGER-UI)
 REST_FRAMEWORK = {
-    #______________JWT______________#
+    # JWT settings
     'DEFAULT_AUTHENTICATION_CLASSES': [
             'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    #______________OpenApi/Swagger-UI______________#
+    # OPENAPI/SWAGGER-UI settings
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
 }
 
 
-# _________JWT_________ #
+# JWT settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -195,15 +195,28 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-# _________SWAGGER_________ #
+# OPENAPI/SWAGGER-UI settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Django5 Test Swagger API',
     'DESCRIPTION': 'Django5 Test Swagger API description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
-# ______________________________________________________________________________________________________________________
-# _________REDIS_________ #
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-# ______________________________________________________________________________________________________________________
+
+# REDIS settings
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+CACHE_TTL = 60 * 15
+REDIS_USER = os.getenv('REDIS_USER')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'redis://{REDIS_USER}:{REDIS_PASSWORD}{REDIS_HOST}:{REDIS_PORT}/1', 
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
