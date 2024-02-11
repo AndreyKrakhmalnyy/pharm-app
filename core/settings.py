@@ -24,25 +24,27 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # _________DJANGO_________ #
+    # DJANGO
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # _________JWT_________ #
+    # JWT
     'rest_framework_simplejwt',
-    # _________DRF_________ #
+    # DRF
     'rest_framework',
-    # _________pharm_app_________ #
+    # pharm_app
     'pages.apps.PagesConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'products.apps.ProductsConfig',
     'authorization.apps.AuthorizationConfig',
-    # _________OPENAPI/SWAGGER-UI_________ #
+    # OPENAPI/SWAGGER-UI
     'drf_spectacular',
+    # DEBUG TOOLBAR
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # DEBUG TOOLBAR middleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

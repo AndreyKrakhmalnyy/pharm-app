@@ -39,7 +39,7 @@ urlpatterns = [
     path('JWT/api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('JWT/api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # REDIS
-    path('products/', include('products.redis.urls')),
+    # path('products/', include('products.redis.urls')),
     # DEBUG TOOLBAR
     path('__debug__/', include(debug_toolbar.urls)),
 ]
