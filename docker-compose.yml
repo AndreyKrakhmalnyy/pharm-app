@@ -1,22 +1,84 @@
-version: '3.10' # Версия python
+version: '3.10.12' # Версия python
 
 services:
+
+  project:
+    image: pharmapp_image:latest # Имя созданного образа по Dockerfile
+    container_name: pharmapp_container
+    depends_on: # Установление зависимости образа от сервиса БД
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    command: > # Описание всего, что нужно сделать контейнеру для запуска приложения
+      bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000" 
+    env_file: # Имя файла с зависимостями
+      - .env
+      
   db: # POSTGRES_HOST из .env
     image: postgres:latest # Версия psql
-    container_name: pharmapp_postgres # Имя контейнера БД
+    container_name: postgres_container # Имя контейнера БД
+
     volumes: 
       - ~/.pg/pg_data/pharmapp_db:/var/lib/postgresql/data
     env_file: # Имя файла с зависимостями
       - .env
 
-  project:
-    image: pharmapp_image:latest # Имя созданного образа по Dockerfile
-    container_name: pharmapp_container
-    depends_on: # Установление зависимости образа от сервиса БДы
-      - db
+  redis:
+    image: redis:5.0.1   # Указывает на используемый образ Redis и его версию
+    restart: always
+    container_name: redis_container
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"  # Маппинг портов хоста на порты контейнера Redis
+    volumes:
+      - ~/etc/redis/redis.conf:/etc/redis/redis.conf  # Монтирование файла redis.conf внутрь контейнера Redis
+    command: redis-server /etc/redis/redis.conf  # Команда запуска Redis сервера
     env_file: # Имя файла с зависимостями
       - .env
-    ports:
-      - "8000:8000"
-    command: > # Описание всего, что нужно сделать контейнеру для запуска приложения
-      bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000" 
+
+
+
+
+
+
+
+
+
+# DEFAULT
+# version: '3.10.12' # Версия python
+
+# services:
+
+#   project:
+#     image: pharmapp_image:latest # Имя созданного образа по Dockerfile
+#     container_name: pharmapp_container
+#     depends_on: # Установление зависимости образа от сервиса БД
+#       - db
+#       - redis
+#     ports:
+#       - "8000:8000"
+#     command: > # Описание всего, что нужно сделать контейнеру для запуска приложения
+#       bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:8000" 
+#     env_file: # Имя файла с зависимостями
+#       - .env
+      
+#   db: # POSTGRES_HOST из .env
+#     image: postgres:latest # Версия psql
+#     container_name: postgres_container # Имя контейнера БД
+
+#     volumes: 
+#       - ~/.pg/pg_data/pharmapp_db:/var/lib/postgresql/data
+#     env_file: # Имя файла с зависимостями
+#       - .env
+
+#   redis:
+#     image: redis:5.0.1   # Указывает на используемый образ Redis и его версию
+#     restart: always
+#     container_name: redis_container
+#     ports:
+#       - "${REDIS_PORT}:${REDIS_PORT}"  # Маппинг портов хоста на порты контейнера Redis
+#     volumes:
+#       - ~/etc/redis/redis.conf:/etc/redis/redis.conf  # Монтирование файла redis.conf внутрь контейнера Redis
+#     command: redis-server /etc/redis/redis.conf  # Команда запуска Redis с установкой пароля и добавлением дополнительного конфигурационного файла
+#     env_file: # Имя файла с зависимостями
+#       - .env

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Category, SubCategory, Product, Instruction
 
-class CategorySerializer(serializers.ModelSerializer): # Создаём класс сериализатор для преобразования данных модели в JSON и обратно для взаимодействия с данными через API.
+class CategorySerializer(serializers.ModelSerializer): 
     class Meta:
         model = Category
         fields = '__all__'

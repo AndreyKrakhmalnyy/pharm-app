@@ -5,8 +5,8 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# .env
+    
+# .env settings
 load_dotenv()
 
 # Quick-start development settings - unsuitable for production
@@ -20,7 +20,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# DEBUG TOOLBAR
+# DEBUG TOOLBAR settings
 if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     # DEBUG TOOLBAR
     'debug_toolbar',
+    # CELERY
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -99,10 +101,22 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),   
+        'HOST': 'localhost',
         'PORT': os.getenv('POSTGRES_PORT'),        
     }
 }
+
+# # POSTGRESQL settings
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('POSTGRES_DB'),
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': os.getenv('POSTGRES_PORT'),        
+#     }
+# }
 
 AUTH_USER_MODEL = 'authorization.User'
 
@@ -216,19 +230,47 @@ SPECTACULAR_SETTINGS = {
 }
 
 # REDIS settings
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
 CACHE_TTL = 60 * 15
 REDIS_USER = os.getenv('REDIS_USER')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
-
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_USER}:{REDIS_PASSWORD}{REDIS_HOST}:{REDIS_PORT}/1', 
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1', 
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
+
+# REDIS_HOST = os.getenv('REDIS_HOST')
+# REDIS_PORT = os.getenv('REDIS_PORT')
+# CACHE_TTL = 60 * 15
+# REDIS_USER = os.getenv('REDIS_USER')
+# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+#         'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1', 
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
+
+# CELERY settings
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_TIMEZONE = "Europe/Moscow"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
+
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+# CELERY_TIMEZONE = "Europe/Moscow"
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
+# CELERY_RESULT_BACKEND = 'django-db'
+# CELERY_CACHE_BACKEND = 'default'
