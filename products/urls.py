@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from products.api.views import CategoryApiView, SubCategoryApiView, ProductApiView, InstructionsApiView
+from products.swagger.views import CategoryApiView, SubCategoryApiView, ProductApiView, InstructionsApiView
 
 router = routers.DefaultRouter() 
 router.register(r'category', CategoryApiView, basename='category')

@@ -10,7 +10,7 @@ urlpatterns = [
     # DRF-API login (http://127.0.0.1:3000/drf-auth/login/?next=/api-root/)
     path('drf-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # SWAGGER-UI (http://127.0.0.1:3000/open-api/schema/swagger-ui/)
-    path('open-api/', include('products.api.urls')),
+    path('open-api/', include('products.swagger.urls')),
     # JWT (http://127.0.0.1:3000/v1/jwt/token/)
     path('v1/jwt/', include('products.jwt.urls')),
     # DEBUG TOOLBAR
