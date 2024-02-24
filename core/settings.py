@@ -101,28 +101,14 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': 'localhost', # для докера - os.getenv('POSTGRES_HOST'), локально - 'localhost'
         'PORT': os.getenv('POSTGRES_PORT'),        
     }
 }
-
-# # POSTGRESQL settings
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('POSTGRES_DB'),
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': os.getenv('POSTGRES_PORT'),        
-#     }
-# }
+# Для localhost - kas190697@gmail.com, abemuH44!
+# Для docker - admin, 240530
 
 AUTH_USER_MODEL = 'authorization.User'
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -168,16 +154,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # DJANGO REST FRAMEWORK settings (JWT and OPENAPI/SWAGGER-UI)
 REST_FRAMEWORK = {
+    
     # JWT settings
     'DEFAULT_AUTHENTICATION_CLASSES': [
             'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    
     # OPENAPI/SWAGGER-UI settings
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+
 
 
 # JWT settings
@@ -223,8 +213,9 @@ SIMPLE_JWT = {
 
 # OPENAPI/SWAGGER-UI settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Django5 Test Swagger API',
-    'DESCRIPTION': 'Django5 Test Swagger API description',
+    'TITLE': 'PharmApp API',
+    'DESCRIPTION': 'Представляет собой API для получения данных о категории товара, подкатегории товара, инструкции \
+        к товару и описание основных характеристик самого продукта. Доступ к данным доступен через JWT токен.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
@@ -235,37 +226,23 @@ REDIS_PORT = os.getenv('REDIS_PORT')
 CACHE_TTL = 60 * 15
 REDIS_USER = os.getenv('REDIS_USER')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1', 
+        'LOCATION': 'redis://localhost:6380', # f'redis://{REDIS_HOST}:{REDIS_PORT}/1' - для docker
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
 
-# REDIS_HOST = os.getenv('REDIS_HOST')
-# REDIS_PORT = os.getenv('REDIS_PORT')
-# CACHE_TTL = 60 * 15
-# REDIS_USER = os.getenv('REDIS_USER')
-# REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1', 
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
-
 # CELERY settings
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0' 
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'default'
 
 # CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'

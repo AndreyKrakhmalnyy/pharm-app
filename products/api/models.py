@@ -17,7 +17,7 @@ class SubCategory(models.Model): # Описывает классификацию
 class Product(models.Model): # Описывает основные характеристики выбранного товара
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE) # Одна подкатегория имеет несколько продуктов, т.е. 'ForeignKey' (one-to-many) 
-    name_product = models.CharField(max_length=100, null=True, blank=True)
+    name_product = models.CharField(max_length=100)
     price = models.CharField(max_length=10) # Стоимость
     volume = models.CharField(max_length=10, null=True, blank=True) # Объём
     quantity = models.IntegerField(null=True, blank=True) # Количество

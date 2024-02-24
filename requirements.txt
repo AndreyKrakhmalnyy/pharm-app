@@ -19,6 +19,8 @@ djangorestframework==3.14.0
 djangorestframework-jwt==1.11.0
 djangorestframework-simplejwt==5.3.1
 drf-spectacular==0.27.1
+flower==2.0.1
+humanize==4.9.0
 idna==3.6
 inflection==0.5.1
 jsonschema==4.21.1
@@ -28,6 +30,7 @@ Markdown==3.5.2
 numpy==1.26.4
 packaging==23.2
 pillow==10.2.0
+prometheus_client==0.20.0
 prompt-toolkit==3.0.43
 psycopg2==2.9.9
 pyarrow==15.0.0
@@ -43,6 +46,7 @@ rpds-py==0.18.0
 six==1.16.0
 sqlparse==0.4.4
 svgwrite==1.4.3
+tornado==6.4
 Tree==0.2.4
 typing_extensions==4.9.0
 tzdata==2024.1

@@ -18,7 +18,8 @@ services:
   db: # POSTGRES_HOST из .env
     image: postgres:latest # Версия psql
     container_name: postgres_container # Имя контейнера БД
-
+    ports:
+      - "5433:${POSTGRES_PORT}"
     volumes: 
       - ~/.pg/pg_data/pharmapp_db:/var/lib/postgresql/data
     env_file: # Имя файла с зависимостями
