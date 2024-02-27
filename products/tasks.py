@@ -1,5 +1,4 @@
-from core.celery.celery import app
-
+from utils.tasks.celery import app
 
 @app.task
 def sum_quad(x, y):

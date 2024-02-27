@@ -1,7 +1,18 @@
 import os
 from dotenv import load_dotenv 
 from pathlib import Path
-from datetime import timedelta
+from utils.api.settings import SPECTACULAR_SETTINGS
+from utils.cache.settings import REDIS_HOST, REDIS_PORT, CACHE_TTL, REDIS_USER, REDIS_PASSWORD, CACHES
+from utils.jwt_auth.settings import REST_FRAMEWORK, SIMPLE_JWT
+from utils.tasks.settings import (
+    CELERY_BROKER_URL, 
+    CELERY_RESULT_BACKEND, 
+    CELERY_TIMEZONE,
+    CELERY_TASK_TRACK_STARTED,
+    CELERY_TASK_TIME_LIMIT,
+    CELERY_CACHE_BACKEND
+)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,7 +69,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # DEBUG TOOLBAR middleware
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,7 +99,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -150,104 +160,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-
-# DJANGO REST FRAMEWORK settings (JWT and OPENAPI/SWAGGER-UI)
 REST_FRAMEWORK = {
-    
-    # JWT settings
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    
-    # OPENAPI/SWAGGER-UI settings
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-
-
-
-# JWT settings
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": False,
-    "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
-
-    "ALGORITHM": os.getenv("SIMPLE_JWT_ALGORITHM"),
-    "SIGNING_KEY": os.getenv("SIMPLE_JWT_SIGNING_KEY"),
-    "VERIFYING_KEY": os.getenv("SIMPLE_JWT_VERIFYING_KEY"),
-    "AUDIENCE": None,
-    "ISSUER": None,
-    "JSON_ENCODER": None,
-    "JWK_URL": None,
-    "LEEWAY": 0,
-
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
-    "USER_ID_CLAIM": "user_id",
-    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
-
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "TOKEN_TYPE_CLAIM": "token_type",
-    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
-
-    "JTI_CLAIM": "jti",
-
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
-    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
-    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
-    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
-}
-
-# OPENAPI/SWAGGER-UI settings
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'PharmApp API',
-    'DESCRIPTION': 'Представляет собой API для получения данных о категории товара, подкатегории товара, инструкции \
-        к товару и описание основных характеристик самого продукта. Доступ к данным доступен через JWT токен.',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
-
-# REDIS settings
-REDIS_HOST = os.getenv('REDIS_HOST')
-REDIS_PORT = os.getenv('REDIS_PORT')
-CACHE_TTL = 60 * 15
-REDIS_USER = os.getenv('REDIS_USER')
-REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://localhost:6380', # f'redis://{REDIS_HOST}:{REDIS_PORT}/1' - для docker
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
-
-# CELERY settings
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0' 
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
-CELERY_TIMEZONE = "Europe/Moscow"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_CACHE_BACKEND = 'default'
-
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-# CELERY_TIMEZONE = "Europe/Moscow"
-# CELERY_TASK_TRACK_STARTED = True
-# CELERY_TASK_TIME_LIMIT = 30 * 60
-# CELERY_RESULT_BACKEND = 'django-db'
-# CELERY_CACHE_BACKEND = 'default'

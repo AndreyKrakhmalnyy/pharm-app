@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .swagger.models import Category, SubCategory, Product, Instruction
+from products.models import Category, SubCategory, Product, Instruction
 
 admin.site.register(Category)
 admin.site.register(SubCategory)
