@@ -111,7 +111,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'localhost', # для докера - os.getenv('POSTGRES_HOST'), локально - 'localhost'
+        'HOST': os.getenv('POSTGRES_HOST'), # для докера - os.getenv('POSTGRES_HOST'), локально - 'localhost'
         'PORT': os.getenv('POSTGRES_PORT'),        
     }
 }
