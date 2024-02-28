@@ -3,3 +3,4 @@ Makefile
 .vscode/settings.json
 docker-compose.yml
 Dockerfile
+redis.conf
