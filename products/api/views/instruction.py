@@ -1,10 +1,5 @@
-import json
-from django.core.cache import cache
 from django.conf import settings
-from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema
@@ -13,10 +8,6 @@ from products.models import Instruction
 from utils.jwt_auth.auth import jwt_auth
 
 from products.api.serializers.instruction import InstructionsSerializer
-from products.api.schemas.instruction import (
-    get_instructions, post_instruction, get_instruction_by_id,
-    put_instruction_by_id, patch_instruction_by_id, delete_instruction_by_id,
-)
 
 import redis
 from utils.cache import settings
@@ -31,26 +22,100 @@ class InstructionsApiView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes = [jwt_auth]
     
-    @get_instructions()
+    @extend_schema(
+        summary="Получение списка с полным описанием инструкций для каждого товара.", 
+        description="Представляет собой список словарей с полями: \
+            'id' (уникальный идентификатор инструкции) \
+            'product' (уникальный идентификатор товара), \
+            'name_product (название товара) \
+            'composition' (cостав) \
+            'peculiarities' (особенности), \
+            'product_packaging' (комплектация), \
+            'description' (описание), \
+            'indications_for_use' (показания), \
+            'contraindications' (противопоказания), \
+            'mode_of_application' (способ применения), \
+            'storage_conditions' (условия хранения)"
+    )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    @post_instruction()
+
+    @extend_schema(
+        summary="Добавление инструкции к товару.", 
+        description="Создаёт инструкцию к товару, ID инструкции генерируется автоматически. Для добавления \
+        необходимо указать следующие поля: \
+            'product' (уникальный идентификатор товара), \
+            'name_product (название товара) \
+            'composition' (cостав) \
+            'peculiarities' (особенности), \
+            'product_packaging' (комплектация), \
+            'description' (описание), \
+            'indications_for_use' (показания), \
+            'contraindications' (противопоказания), \
+            'mode_of_application' (способ применения), \
+            'storage_conditions' (условия хранения)"
+    )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
-    @get_instruction_by_id()
+    @extend_schema(
+        summary="Получение инструкции товара.", 
+        description="Для получения необходимо указать ID инструкции. Ответ будет получен в виде словаря с данными: \
+            'id' (уникальный идентификатор инструкции) \
+            'product' (уникальный идентификатор товара), \
+            'name_product (название товара) \
+            'composition' (cостав) \
+            'peculiarities' (особенности), \
+            'product_packaging' (комплектация), \
+            'description' (описание), \
+            'indications_for_use' (показания), \
+            'contraindications' (противопоказания), \
+            'mode_of_application' (способ применения), \
+            'storage_conditions' (условия хранения)"
+    )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-    @put_instruction_by_id()
+    @extend_schema(
+        summary="Полное обновление инструкции к товару.", 
+        description="Изменяет характеристики товара. Требуется ввод всех приведённых характеристик: \
+            'id' (уникальный идентификатор инструкции) \
+            'product' (уникальный идентификатор товара), \
+            'name_product (название товара) \
+            'composition' (cостав) \
+            'peculiarities' (особенности), \
+            'product_packaging' (комплектация), \
+            'description' (описание), \
+            'indications_for_use' (показания), \
+            'contraindications' (противопоказания), \
+            'mode_of_application' (способ применения), \
+            'storage_conditions' (условия хранения)"
+    )
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
-    @patch_instruction_by_id()
+    @extend_schema(
+        summary="Частичное обновление инструкции к товару.", 
+        description="Позволяет изменить только требуемые параметры. Полный список характеристик: \
+            'id' (уникальный идентификатор инструкции) \
+            'product' (уникальный идентификатор товара), \
+            'name_product (название товара) \
+            'composition' (cостав) \
+            'peculiarities' (особенности), \
+            'product_packaging' (комплектация), \
+            'description' (описание), \
+            'indications_for_use' (показания), \
+            'contraindications' (противопоказания), \
+            'mode_of_application' (способ применения), \
+            'storage_conditions' (условия хранения)"
+    )
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @delete_instruction_by_id()
+    @extend_schema(
+        summary="Удаление инструкции к товару.", 
+        description="Для удаления необходимо указать ID инструкции."
+    )       
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
