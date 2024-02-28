@@ -1,5 +1,5 @@
 Makefile
 .env
 .vscode/settings.json
-.docker-compose.yml
-.Dockerfile
+docker-compose.yml
+Dockerfile
