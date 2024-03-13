@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv 
 from pathlib import Path
 from utils.api.settings import SPECTACULAR_SETTINGS
-from utils.cache.settings import REDIS_HOST, REDIS_PORT, CACHE_TTL, REDIS_USER, REDIS_PASSWORD, CACHES
+from utils.cache.settings import REDIS_HOST, REDIS_PORT, REDIS_USER, REDIS_PASSWORD, CACHES
 from utils.jwt_auth.settings import REST_FRAMEWORK, SIMPLE_JWT
 from utils.tasks.settings import (
     CELERY_BROKER_URL, 
@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # CELERY
     'django_celery_results',
+    # REDIS
+    'redis',
 ]
 
 MIDDLEWARE = [
@@ -111,8 +113,16 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'), # для докера - os.getenv('POSTGRES_HOST'), локально - 'localhost'
-        'PORT': os.getenv('POSTGRES_PORT'),        
+        'HOST': os.getenv('POSTGRES_HOST'), 
+        'PORT': os.getenv('POSTGRES_PORT'),  
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_TEST_DB'),  
+        'USER': os.getenv('POSTGRES_TEST_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 # Для localhost - kas190697@gmail.com, abemuH44!

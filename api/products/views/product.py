@@ -1,17 +1,11 @@
-from django.conf import settings
 from rest_framework import viewsets
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
-
 from drf_spectacular.utils import extend_schema
 from products.models import Product
-
 from utils.jwt_auth.auth import jwt_auth
-
-from products.api.serializers.product import ProductSerializer
-
-import redis
-from utils.cache import settings
-redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0) 
+from api.products.serializers.product import ProductSerializer
 
 
 @extend_schema(tags=['Product'])
@@ -22,6 +16,7 @@ class ProductApiView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes = [jwt_auth]
     
+    @method_decorator(cache_page(60))
     @extend_schema(
         summary="Получение списка всех товаров с их характеристиками.", 
         description="Представляет собой список словарей с полями: \
@@ -40,6 +35,14 @@ class ProductApiView(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+    
+    @method_decorator(cache_page(60))
+    @extend_schema(
+        summary="Получение конкретного товара со всеми характеристиками по его ID.", 
+        description="Для получения необходимо указать ID аптечного товара."
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(
         summary="Добавление товара.", 
@@ -56,13 +59,6 @@ class ProductApiView(viewsets.ModelViewSet):
             'expiration_date' (срок годности), \
             'release_form', (форма выпуска) \
             'access_medicament' (отпуск товара - по рецепту или без рецепта)"
-    )
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-    @extend_schema(
-        summary="Получение конкретного товара со всеми характеристиками по его ID.", 
-        description="Для получения необходимо указать ID аптечного товара."
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
@@ -113,3 +109,13 @@ class ProductApiView(viewsets.ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+    
+methods = {
+    'get': 'list',
+    'put': 'update',
+    'patch': 'partial_update',
+    'post': 'create',
+    'delete': 'destroy'
+}
+
+ProductView = cache_page(60)(ProductApiView.as_view(methods))

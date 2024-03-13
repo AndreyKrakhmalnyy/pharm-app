@@ -1,18 +1,11 @@
-from django.conf import settings
 from rest_framework import viewsets
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
-
 from drf_spectacular.utils import extend_schema
 from products.models import Instruction
-
 from utils.jwt_auth.auth import jwt_auth
-
-from products.api.serializers.instruction import InstructionsSerializer
-
-import redis
-from utils.cache import settings
-redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0) 
-
+from api.products.serializers.instruction import InstructionsSerializer
 
 @extend_schema(tags=['Instruction'])
 class InstructionsApiView(viewsets.ModelViewSet):
@@ -22,6 +15,7 @@ class InstructionsApiView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes = [jwt_auth]
     
+    @method_decorator(cache_page(60))
     @extend_schema(
         summary="Получение списка с полным описанием инструкций для каждого товара.", 
         description="Представляет собой список словарей с полями: \
@@ -40,11 +34,11 @@ class InstructionsApiView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-
+    @method_decorator(cache_page(60))
     @extend_schema(
-        summary="Добавление инструкции к товару.", 
-        description="Создаёт инструкцию к товару, ID инструкции генерируется автоматически. Для добавления \
-        необходимо указать следующие поля: \
+        summary="Получение инструкции товара.", 
+        description="Для получения необходимо указать ID инструкции. Ответ будет получен в виде словаря с данными: \
+            'id' (уникальный идентификатор инструкции) \
             'product' (уникальный идентификатор товара), \
             'name_product (название товара) \
             'composition' (cостав) \
@@ -60,9 +54,9 @@ class InstructionsApiView(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     @extend_schema(
-        summary="Получение инструкции товара.", 
-        description="Для получения необходимо указать ID инструкции. Ответ будет получен в виде словаря с данными: \
-            'id' (уникальный идентификатор инструкции) \
+        summary="Добавление инструкции к товару.", 
+        description="Создаёт инструкцию к товару, ID инструкции генерируется автоматически. Для добавления \
+        необходимо указать следующие поля: \
             'product' (уникальный идентификатор товара), \
             'name_product (название товара) \
             'composition' (cостав) \
@@ -119,3 +113,13 @@ class InstructionsApiView(viewsets.ModelViewSet):
     )       
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+    
+methods = {
+    'get': 'list',
+    'put': 'update',
+    'patch': 'partial_update',
+    'post': 'create',
+    'delete': 'destroy'
+}
+
+InstructionsView = cache_page(60)(InstructionsApiView.as_view(methods))
